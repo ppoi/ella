@@ -1,0 +1,4 @@
+[submodule "lib/core"]
+	path = lib/core
+	url = https://github.com/ppoi/ella-spa-core.git
+	branch = feature-1

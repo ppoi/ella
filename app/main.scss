@@ -1,0 +1,13 @@
+@use 'bootstrap/scss/bootstrap';
+@use '@tblab/ella-spa-core/style/navigation.css';
+
+:root {
+  --gv-navigation-width: 80px;
+  --gv-navigation-background-color: #333333;
+  --gv-navigation-font-size: 12px;
+}
+
+body {
+  font-optical-sizing: auto;
+  font-kerning: auto;
+}
