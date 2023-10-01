@@ -1,13 +1,16 @@
 {
-    "compilerOptions": {
-        "module": "es6",
-        "target": "es6",
-        "baseUrl": ".",
-        "paths": {
-            "~/*": ["./*"]
-        },
-        "checkJs": false,
-        "moduleResolution": "node"
+  "compilerOptions": {
+    "module": "es6",
+    "target": "es6",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./*"]
     },
-    "exclude": ["node_modules", "dist"]
+    "checkJs": false,
+    "moduleResolution": "node"
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
