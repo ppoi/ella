@@ -1,20 +1,12 @@
 'use strict';
 
 import { writable } from "svelte/store";
+import config, { bootstarp as configBootstrap } from './config';
 
 /**
  * セッション情報
  * @typedef {Object} Session
  * @property {AuthToken} token
- * @property {AppConfig} config
- */
-
-/**
- * 設定情報
- * @typedef {Object} AppConfig
- * @property {string} API_ENDPOINT
- * @property {string} AUTH_ENDPOINT
- * @property {string} AUTH_CLIENT_ID
  */
 
 /**
@@ -29,6 +21,7 @@ import { writable } from "svelte/store";
 
 /**
  * セッションストア
+ * @type {Writable<Session>}
  */
 const activeSession = writable(null);
 
@@ -38,13 +31,7 @@ const activeSession = writable(null);
  */
 function bootstrap() {
   return new Promise((resolve, reject)=>{
-    fetch('/env.json').then(res=>{
-      if(res.ok) {
-        return res.json();
-      } else {
-        reject('fail to fetch config');
-      }
-    }).then(config=>{
+    configBootstrap().then(()=>{
       console.log('config', config);
 
       let state = sessionStorage.getItem('AUTH_STATE');
@@ -61,8 +48,7 @@ function bootstrap() {
           localStorage.setItem('AUTH_TOKEN', JSON.stringify(token));
           window.history.replaceState(null, null, initialURL);
           let session = {
-            token: token,
-            config: config
+            token: token
           };
           activeSession.set(session);
           resolve(session);
@@ -83,9 +69,9 @@ function bootstrap() {
       } else {
         console.log('FINISH', token);
         let session = {
-          token: JSON.parse(token),
-          config: config
+          token: JSON.parse(token)
         };
+        activeSession.set(session);
         resolve(session);
       }
     }).catch(e=>{
@@ -96,9 +82,8 @@ function bootstrap() {
 
 /**
  * 認証画面表示
- * @param {AppConfig} config 
  */
-function authenticate(config) {
+function authenticate() {
   sessionStorage.setItem('AUTH_STATE', 'ella');
   sessionStorage.setItem('AUTH_INITIAL_URL', window.location.href);
   let params = new URLSearchParams();
@@ -112,12 +97,11 @@ function authenticate(config) {
 
 /**
  * 認証コードから認可トークンを取得
- * @param {AppConfig} config 
  * @param {string} code 
  * @returns {Promise<AuthToken>}
  */
-function exchangeToken(config, code) {
-  return issueToken(config, {grant_type: 'authorization_code', code: code});
+function exchangeToken(code) {
+  return issueToken({grant_type: 'authorization_code', code: code});
 }
 
 /**
@@ -128,7 +112,7 @@ function exchangeToken(config, code) {
 function refreshToken(session) {
   let refreshToken = session.token.refresh_token;
   return new Promise((resolve, reject)=>{
-    issueToken(session.config, {grant_type: 'refresh_token', refresh_token: refreshToken}).then(token=>{
+    issueToken({grant_type: 'refresh_token', refresh_token: refreshToken}).then(token=>{
       token.refresh_token = refreshToken;
       session.token = token;
       resolve();
@@ -139,12 +123,11 @@ function refreshToken(session) {
 }
 
 /**
- * Token endpoint呼び出し
- * @param {AppConfig} config 
- * @param {*} options
+ * Cognitoトークンエンドポイント呼び出し
+ * @param {Object<string, (string|Object<string, string>)>} options 
  * @returns {Promise<AuthToken>} 認可トークン
  */
-function issueToken(config, options) {
+function issueToken(options) {
   let params = new URLSearchParams();
   params.set('client_id', config.AUTH_CLIENT_ID);
   params.set('redirect_uri', 'http://localhost:3000');

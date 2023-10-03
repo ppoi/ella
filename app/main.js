@@ -6,10 +6,7 @@ import App from './app.svelte';
 bootstrap().then(session=>{
   console.log('session', session);
   new App({
-    target: document.querySelector('#app'),
-    props: {
-      session: session
-    }
+    target: document.querySelector('#app')
   });
 }).catch(e=>{
   console.error('fail to initialize app', e);

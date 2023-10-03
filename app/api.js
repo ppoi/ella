@@ -1,16 +1,20 @@
 'use strict';
 
 import { merge } from "lodash-es";
+import { get } from 'svelte/store';
+import { activeSession } from "./session";
+import config from './config';
 
 /**
  * ella API呼び出し
- * @param {import("./session").Session} session セッション情報
  * @param {string} path APIパス
  * @param {Object<string, (Object<string, string>|string)} [options] fetchオプション
  * @returns {Promise<Response>}
  */
-function callApi(session, path, options) {
-  return fetch(`${session.config.API_ENDPOINT}${path}`, merge({
+function callApi(path, options) {
+  /** @type {import("./session").Session} */
+  let session = get(activeSession);
+  return fetch(`${config.API_ENDPOINT}${path}`, merge({
     method: 'get',
     mode: 'cors',
     headers: {

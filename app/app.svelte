@@ -27,7 +27,7 @@
 
   function apiTest() {
     console.log('access_token', $activeSession.token.id_token);
-    api($activeSession, '/').then(res=>{
+    api('/').then(res=>{
       if(res.ok) {
         return res.json();
       } else {
