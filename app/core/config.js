@@ -8,6 +8,7 @@ import { assign } from "lodash-es";
  * @property {string} API_ENDPOINT APIエンドポイントURL
  * @property {string} AUTH_ENDPOINT CognitoユーザプールエンドポイントURL
  * @property {string} AUTH_CLIENT_ID CongnitoユーザプールクライアントID
+ * @property {string} BASE_URL SPAベースURL
  */
 
 /**
@@ -21,12 +22,12 @@ const config = {};
  * @returns {Promise<AppConfig>}
  */
 function bootstarp() {
-  new Promise<AppConfig>((resolve, reject)=>{
+  return new Promise((resolve, reject)=>{
     fetch('/env.json').then(res=>{
       if(res.ok && res.headers.get('Content-Type') == 'application/json') {
         res.json().then(data=>{
           assign(config, data);
-          config.freeze();
+          Object.freeze(config);
           resolve(config);
         }).catch(e=>{
           reject({

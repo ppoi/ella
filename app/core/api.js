@@ -14,6 +14,7 @@ import config from './config';
 function callApi(path, options) {
   /** @type {import("./session").Session} */
   let session = get(activeSession);
+  console.log('[api]', session);
   return fetch(`${config.API_ENDPOINT}${path}`, merge({
     method: 'get',
     mode: 'cors',
