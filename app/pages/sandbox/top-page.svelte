@@ -1,8 +1,9 @@
 <script>
   import api from '~/app/core/api';
+  import PageContent from '~/app/layout/page-content.svelte';
 
   function apiTest() {
-    api('/').then(res=>{
+    api('/data/data.json').then(res=>{
       if(res.ok) {
         return res.json();
       } else {
@@ -20,4 +21,6 @@
 
 </script>
 
-<button class="btn btn-primary" on:click|preventDefault={apiTest}>テスト12</button>
+<PageContent>
+  <button class="btn btn-primary" on:click|preventDefault={apiTest}>テスト12</button>
+</PageContent>

@@ -1,26 +1,27 @@
 'use script';
-import route, { router, toRegexp, match, configure } from 'rawth';
+import route, { router, toRegexp, match, configure as rawthConfigure} from 'rawth';
 import { tick } from 'svelte';
 import { writable } from 'svelte/store';
-
-configure({
-  base: window.location.origin
-});
-
-const routeMatched = writable(false);
 
 router.on.error((error)=>{
   console.error('[router] router error', error);
 });
 
+/**
+ * ページルータのマッチング状態
+ * @type {import('svelte/store').Writable<boolean>}
+ */
+const routeMatched = writable(false);
 
 /**
- * @param {string} path 
+ * ページルータにページを登録します。
+ * @param {string} path ページ表示を行うパス正規表現
  * @param {Function} entered 現在のURLにマッチした際のコールバック
  * @param {Function} exited 現在のURLがマッチしなくなった際のコールバック
  * @returns {Function} 終了時コールバック
  */
 function register(path, entered, exited) {
+  console.log('[router] register path', path);
   let pathRegexp = toRegexp(path);
   let stream = route(path);
   let active = false;
@@ -32,8 +33,10 @@ function register(path, entered, exited) {
       active = false;
       exited();
     }
+    routeMatched.set(false);
   };
   const checkExit = (value)=>{
+    console.log('[router] check path', value);
     if(!match(value, pathRegexp)) {
       exit();
     }
@@ -44,7 +47,7 @@ function register(path, entered, exited) {
     await tick();
     active = true;
     router.on.value(checkExit);
-    routeMatched.set(true);
+    routeMatched.set(active);
     entered(params);
   });
   stream.on.error((error)=>{
@@ -59,7 +62,7 @@ function register(path, entered, exited) {
 }
 
 /**
- * 
+ * 指定されたページに遷移します。
  * @param {string} path 遷移先パス
  * @param {boolean} [silently] ヒストリを更新しない場合true
  */
@@ -76,8 +79,8 @@ function navigate(path, silently) {
 }
 
 /**
- * 
- * @param {PointerEvent} ev 
+ * クリックイベントをnavigateにアタッチします。
+ * @param {PointerEvent} ev クリックイベント
  */
 async function handleClick(ev) {
   if(ev.defaultPrevented) {
@@ -93,23 +96,70 @@ async function handleClick(ev) {
         break;
       };
       let href = node.attributes.href;
-      if(href && href.value && href.value.startsWith('#')) {
-          // 条件: hrefが定義されている
-          //   a. 「#...」じゃない
-          //   b. クロスドメインじゃない
-          break;
+      if(href && href.value) {
+        try {
+          let url = new URL(href.value, baseURI).toString();
+          if(url.startsWith(baseURI)) {
+            // 条件: 外部URLではない
+            ev.preventDefault();
+            navigate(url);
+          }
+        } catch(e) {
+          console.error('invalid URL', href.value, e);
+        }
+        break;
       }
-      ev.preventDefault();
-      navigate(node.attributes.href.value);
-      break;
     }
     node = node.parentNode;
   } while(node);
 }
 
+/**
+ * popstateイベントをnavigateにアタッチします。
+ * @param {PopStateEvent} ev PopStateイベント
+ */
+function handlePopstate(ev) {
+  navigate(window.location.href, true);
+}
+
+/**
+ * ルーティング処理とDOMイベントを関連付けます。
+ */
+function registerDOMEventListeners() {
+  window.addEventListener('click', handleClick);
+  window.addEventListener('popstate', handlePopstate);
+}
+
+/**
+ * DOMイベントとのルーティング処理の関連付けを解除します。
+ */
+function unregisterDOMEventListeners() {
+  window.removeEventListener('click', handleClick);
+  window.removeEventListener('popstate', handlePopstate);
+}
+
+/**
+ * ベースURI
+ */
+let baseURI = document.baseURI;
+
+/**
+ * rawthルータ設定
+ * @param {*} options rawthルータオプション
+ */
+function configure(options) {
+  if(options.base != null) {
+    baseURI = options.base;
+  }
+  console.log('[router] configure', options);
+  rawthConfigure(options);
+}
+
 export {
+  configure,
   navigate,
-  handleClick,
   register,
-  routeMatched
+  routeMatched,
+  registerDOMEventListeners,
+  unregisterDOMEventListeners
 }

@@ -1,4 +1,5 @@
 <script>
+  import 'bootstrap/js/dist/collapse';
 </script>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
@@ -9,13 +10,13 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/my">Office</a>
+          <a class="nav-link" aria-current="page" href="my">Office</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/db">DB</a>
+          <a class="nav-link" href="cgssdb">DB</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/sandbox">SandBox</a>
+          <a class="nav-link" href="sandbox">SandBox</a>
         </li>
       </ul>
     </div>

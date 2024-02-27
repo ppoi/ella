@@ -32,5 +32,6 @@
   "[markdown]": {
     "files.encoding": "utf8",
     "files.eol": "\r\n"
-  }
+  },
+  "workbench.colorTheme": "Default Dark+"
 }
