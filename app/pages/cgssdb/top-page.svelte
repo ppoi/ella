@@ -4,9 +4,9 @@
   import { onMount } from "svelte";
   import PageContent from "~/app/layout/page-content.svelte";
   import DataTable from "datatables.net-bs5";
-    import session from "~/app/core/session";
-    import { merge } from "lodash-es";
-    import { loading } from "~/app/widget/loading-screen.svelte";
+  import session from "~/app/core/session";
+  import { merge } from "lodash-es";
+  import { loading } from "~/app/widget/loading-screen.svelte";
 
   let params;
   let masterData = {
@@ -95,15 +95,19 @@
 
   <div class="card">
     <div class="card-body">
+      {#if !session.isAnonymous()}
       <form on:submit|preventDefault>
         <button class="btn btn-primary" on:click={listCharacters}>アイドル一覧更新</button>
       </form>
+      {/if}
       <p>version: {masterData.version}</p>
       <Datatables {...listOpts} bind:data="{idols}"></Datatables>
     </div>
   </div>
 
+  {#if !session.isAnonymous()}
   <form on:submit|preventDefault class="mt-3">
     <button class="btn btn-primary" on:click={backupMasterData}>サーバ保存</button>
   </form>
+  {/if}
 </PageContent>

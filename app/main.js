@@ -6,7 +6,6 @@ import App from './app.svelte';
 
 bootstrap(new URL('env.json', document.baseURI)).then(async ()=>{
   await session.checkAuthenticationProceeding();
-  await session.authenticate();
 
   let container = document.querySelector('#app');
   if(container == null) {

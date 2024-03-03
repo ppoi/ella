@@ -2,6 +2,7 @@
 
 /**
  * ユーザ情報
+ * @interface
  */
 class User {
   get username() {
@@ -10,11 +11,21 @@ class User {
   }
 }
 
+/**
+ * @callback stateChnageCallback
+ * @param {string} state
+ */
 
 /**
  * セッション情報クラス
+ * @interface
  */
 class Session {
+
+  /**
+   * @type {stateChnageCallback}
+   */
+  listener = null;
 
   /**
    * ユーザ情報

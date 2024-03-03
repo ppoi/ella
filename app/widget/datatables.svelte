@@ -155,17 +155,15 @@
       api.destroy();
       jquery(container).off().empty();
     }
-    console.log('[datatables] destroyed', DataTables.tables().length);
+    console.log('[datatables] dattables instance is destroyed', DataTables.tables().length);
   }
 
   onDestroy(()=>{
-    console.log('[datatables] destroyed');
+    destroyDataTables();
+    console.log('[datatables] tag destroyed');
   });
   onMount(()=>{
     console.log('[datatables] mounted');
-    return ()=>{
-      console.log('[datatables] cleanup');
-    }
   });
 
   $: {
