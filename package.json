@@ -1,45 +1,26 @@
 {
-  "name": "ella",
-  "version": "1.0.0",
-  "description": "DB of THE IDOLM@STER CINDERELLA GIRLS STARLIGHT STAGE",
+  "name": "ella-monorepo",
+  "version": "2.0.0",
+  "description": "ella",
   "type": "module",
-  "private": true,
-  "scripts": {
-    "spa.dev": "vite --host 0.0.0.0 --port 3000",
-    "test": "vitest run",
-    "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0 --port 3000"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ppoi/ella.git"
   },
-  "author": "PPOI <ppoi@tsukuba-bunko.org>",
+  "author": "PPOI <ppoi@tsukua-bunko.org>",
   "license": "Apache-2.0",
+  "private": true,
   "bugs": {
     "url": "https://github.com/ppoi/ella/issues"
   },
   "homepage": "https://github.com/ppoi/ella#readme",
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^5.0.3",
-    "@testing-library/svelte": "^5.2.7",
-    "@testing-library/user-event": "^14.6.1",
     "esm": "^3.2.25",
-    "jsdom": "^26.0.0",
-    "sass": "^1.85.1",
-    "vite": "^6.2.0",
-    "vite-plugin-html-meta": "^1.0.3",
-    "vitest": "^3.0.7",
-    "vitest-fetch-mock": "^0.4.3"
-  },
-  "dependencies": {
-    "@tblab/ella-spa-core": "file:lib/core",
-    "bootstrap": "^5.3.3",
-    "datatables.net-bs5": "^2.2.2",
-    "datatables.net-select-bs5": "^2.1.0",
-    "jquery": "^3.7.1",
-    "lodash-es": "^4.17.21",
-    "svelte": "^5.20.4"
+    "sass": "^1.89.0",
+    "vite": "^6.3.5"
   },
   "overrides": {
     "esbuild": "^0.25.0"
